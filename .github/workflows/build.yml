@@ -1,4 +1,4 @@
-name: Build Cydia Repo
+name: YH Cydia Repo
 
 on:
   push:

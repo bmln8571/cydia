@@ -3,32 +3,30 @@ name: YH Cydia Repo
 on:
   push:
     branches:
-      - main   # 每次 push 到 main 分支就触发
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ 拉取仓库代码
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2️⃣ 安装 dpkg-dev，用于生成 Packages 文件
       - name: Install dpkg-dev
         run: sudo apt-get update && sudo apt-get install -y dpkg-dev
 
-      # 3️⃣ 生成 Packages 和 Packages.gz
       - name: Generate Packages
         run: |
           mkdir -p cydia
           dpkg-scanpackages debs /dev/null > cydia/Packages
           gzip -k -f cydia/Packages
 
-      # 4️⃣ 上传更新到 GitHub Pages（gh-pages 分支）
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3.9.0
+        uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./cydia
           publish_branch: gh-pages
+          user_name: "github-actions[bot]"
+          user_email: "github-actions[bot]@users.noreply.github.com"
